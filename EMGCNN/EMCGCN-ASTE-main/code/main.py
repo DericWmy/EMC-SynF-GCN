@@ -57,9 +57,9 @@ def get_bert_optimizer(model, args):
 def train(args):
 
     # load dataset
-    train_sentence_packs = json.load(open(args.prefix + args.dataset + '/train.json', encoding='utf-8'))
+    train_sentence_packs = json.load(open(args.prefix + args.dataset + '/train.json'))
     random.shuffle(train_sentence_packs)
-    dev_sentence_packs = json.load(open(args.prefix + args.dataset + '/dev.json', encoding='utf-8'))
+    dev_sentence_packs = json.load(open(args.prefix + args.dataset + '/dev.json'))
 
     post_vocab = VocabHelp.load_vocab(args.prefix + args.dataset + '/vocab_post.vocab')
     deprel_vocab = VocabHelp.load_vocab(args.prefix + args.dataset + '/vocab_deprel.vocab')
@@ -245,7 +245,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--pos_dim', type=int, default=100)
     parser.add_argument('--dep_dim', type=int, default=100)
-    parser.add_argument('--output_dropout', type=int, default=0.01)
+    parser.add_argument('--output_dropout', type=int, default=0.3)
     parser.add_argument('--w_size',type=int, default=5)
     args = parser.parse_args()
 
