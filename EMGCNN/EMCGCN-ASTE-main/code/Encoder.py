@@ -85,7 +85,7 @@ class SynFueEncoder(nn.Module):
         super(SynFueEncoder, self).__init__()
         self.args = args
         self.lagcn = nLaGCN(args)
-        self.fc = nn.Linear(args.bert_feature_dim*2 + args.pos_dim, args.bert_feature_dim*2)
+        self.fc = nn.Linear(args.bert_feature_dim*2 + args.pos_dim, args.bert_feature_dim)
         self.output_dropout = nn.Dropout(args.output_dropout)
         # args.pos_num = 45, args.pos_dim = 100 posyag_ca_size = 47
         self.pod_embedding = nn.Embedding(args.postag_ca_size, args.pos_dim, padding_idx=0)
