@@ -142,7 +142,7 @@ class EMCGCN(torch.nn.Module):
         self.gcn_layers = nn.ModuleList()
 
         self.layernorm = LayerNorm(args.bert_feature_dim)
-
+        self.W = nn.Linear(1536, args.bert_feature_dim)
         for i in range(self.num_layers):
             self.gcn_layers.append(
                 GraphConvLayer(args.device, args.gcn_dim, 5*args.class_num, args.class_num, args.pooling))
@@ -157,6 +157,7 @@ class EMCGCN(torch.nn.Module):
         # h, dep_output = self.SynFue(word_reps=word_reps, simple_graph=simple_graph, graph=graph, pos=pos)
         h, dep_output = self.SynFue(word_reps=bert_feature, simple_graph=simple_word_pair_deprel, graph=word_pair_deprel, pos=word_postag)
 
+
         batch, seq = masks.shape
         tensor_masks = masks.unsqueeze(1).expand(batch, seq, seq).unsqueeze(-1)
         
@@ -167,11 +168,17 @@ class EMCGCN(torch.nn.Module):
         word_pair_synpost_emb = self.synpost_emb(word_pair_synpost)
         
         # BiAffine
-        ap_node = F.relu(self.ap_fc(bert_feature))
-        op_node = F.relu(self.op_fc(bert_feature))
+        ap_node = F.relu(self.ap_fc(h))
+        op_node = F.relu(self.op_fc(h))
         biaffine_edge = self.triplet_biaffine(ap_node, op_node)
-        gcn_input = F.relu(self.dense(bert_feature))
+        gcn_input = F.relu(self.dense(h))
         gcn_outputs = gcn_input
+
+        # ap_node = F.relu(self.ap_fc(bert_feature))
+        # op_node = F.relu(self.op_fc(bert_feature))
+        # biaffine_edge = self.triplet_biaffine(ap_node, op_node)
+        # gcn_input = F.relu(self.dense(bert_feature))
+        # gcn_outputs = gcn_input
 
         weight_prob_list = [biaffine_edge, word_pair_post_emb, word_pair_deprel_emb, word_pair_postag_emb, word_pair_synpost_emb]
         
