@@ -58,8 +58,8 @@ class VocabHelp(object):
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Prepare vocab.')
-    parser.add_argument('--data_dir', default='../data/D1/res16', help='data directory.')
-    parser.add_argument('--vocab_dir', default='../data/D1/res16', help='Output vocab directory.')
+    parser.add_argument('--data_dir', default='../data/D2/res16', help='data directory.')
+    parser.add_argument('--vocab_dir', default='../data/D2/res16', help='Output vocab directory.')
     parser.add_argument('--lower', default=False, help='If specified, lowercase all words.')
     args = parser.parse_args()
     return args
