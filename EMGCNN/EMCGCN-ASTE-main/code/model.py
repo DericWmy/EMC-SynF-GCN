@@ -142,7 +142,7 @@ class EMCGCN(torch.nn.Module):
         self.gcn_layers = nn.ModuleList()
 
         self.layernorm = LayerNorm(args.bert_feature_dim)
-        self.W = nn.Linear(1536, args.bert_feature_dim)
+        self.W = nn.Linear(args.bert_feature*2, args.bert_feature_dim)
         for i in range(self.num_layers):
             self.gcn_layers.append(
                 GraphConvLayer(args.device, args.gcn_dim, 5*args.class_num, args.class_num, args.pooling))
