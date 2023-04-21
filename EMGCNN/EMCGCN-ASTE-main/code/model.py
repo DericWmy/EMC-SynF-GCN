@@ -156,7 +156,7 @@ class EMCGCN(torch.nn.Module):
 
         # h, dep_output = self.SynFue(word_reps=word_reps, simple_graph=simple_graph, graph=graph, pos=pos)
         h, dep_output = self.SynFue(word_reps=bert_feature, simple_graph=simple_word_pair_deprel, graph=word_pair_deprel, pos=word_postag)
-
+        h_out = self.layernorm(h)
 
         batch, seq = masks.shape
         tensor_masks = masks.unsqueeze(1).expand(batch, seq, seq).unsqueeze(-1)
@@ -168,10 +168,10 @@ class EMCGCN(torch.nn.Module):
         word_pair_synpost_emb = self.synpost_emb(word_pair_synpost)
         
         # BiAffine
-        ap_node = F.relu(self.ap_fc(h))
-        op_node = F.relu(self.op_fc(h))
+        ap_node = F.relu(self.ap_fc(h_out))
+        op_node = F.relu(self.op_fc(h_out))
         biaffine_edge = self.triplet_biaffine(ap_node, op_node)
-        gcn_input = F.relu(self.dense(h))
+        gcn_input = F.relu(self.dense(h_out))
         gcn_outputs = gcn_input
 
         # ap_node = F.relu(self.ap_fc(bert_feature))
