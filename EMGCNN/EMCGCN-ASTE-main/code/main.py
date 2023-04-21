@@ -247,6 +247,7 @@ if __name__ == '__main__':
     parser.add_argument('--dep_dim', type=int, default=100)
     parser.add_argument('--output_dropout', type=int, default=0.3)
     parser.add_argument('--w_size',type=int, default=5)
+    parser.add_argument('--num_layer',type=int,default=2)
     args = parser.parse_args()
 
     if args.seed is not None:
