@@ -61,7 +61,7 @@ class nLaGCN(nn.Module):
         self.args = args
         self.model = nn.ModuleList([LabelAwareGCN(args.dep_dim, args.bert_feature_dim,
                                                   args.bert_feature_dim, args.pos_dim)
-                                    for i in range(self.args.num_layers)])
+                                    for i in range(self.args.num_layer)])
         self.dep_embedding = nn.Embedding(args.deprel_size, args.dep_dim, padding_idx=0)
         # self.dep_embedding = nn.Embedding(args.deprel_size, args.dep_dim, padding_idx=0)
 
@@ -87,7 +87,6 @@ class SynFueEncoder(nn.Module):
         self.lagcn = nLaGCN(args)
         self.fc = nn.Linear(args.bert_feature_dim*2 + args.pos_dim, args.bert_feature_dim)
         self.output_dropout = nn.Dropout(args.output_dropout)
-        # args.pos_num = 45, args.pos_dim = 100 posyag_ca_size = 47
         self.pod_embedding = nn.Embedding(args.postag_ca_size, args.pos_dim, padding_idx=0)
 
     def forward(self, word_reps, simple_graph, graph, pos=None, output_attention=False):
@@ -108,7 +107,7 @@ class SynFueEncoder(nn.Module):
         # simple_graph=[batch_size, seq_len, seq_len]
         lagcn_output = self.lagcn(word_reps, simple_graph, graph, pos_embed, output_attention)
         # pos_output=2,14,100
-        pos_output = self.local_attn(word_reps, pos_embed, self.args.num_layers, self.args.w_size)
+        pos_output = self.local_attn(word_reps, pos_embed, self.args.num_layer, self.args.w_size)
 
         output = torch.cat((lagcn_output[0], pos_output, word_reps), dim=-1) # 2,14,1636
         output = self.fc(output) # 2,14,1536
